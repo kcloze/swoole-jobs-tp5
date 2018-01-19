@@ -7,18 +7,15 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+// 定义项目路径
 
-define('SWOOLE_JOBS_ROOT_PATH', __DIR__);
-
+define('APP_PATH', __DIR__ . '/application/');
 define('RUNTIME_PATH', __DIR__ . '/runtime/');
-
-//ini_set('default_socket_timeout', -1);
+define('SWOOLE_JOBS_ROOT_PATH', __DIR__);
 date_default_timezone_set('Asia/Shanghai');
+
+// ThinkPHP 引导文件
 require SWOOLE_JOBS_ROOT_PATH . '/thinkphp/base.php';
-
-// 执行应用
-\think\App::initCommon();
-
 require SWOOLE_JOBS_ROOT_PATH . '/vendor/autoload.php';
 $config = require_once SWOOLE_JOBS_ROOT_PATH . '/application/swoole-jobs.php';
 

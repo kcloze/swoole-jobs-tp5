@@ -15,7 +15,6 @@ class Push extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        var_dump($_SERVER['argv']);
 
         $name = \app\service\SwooleJobs::push('MyJob', 'test');
 
