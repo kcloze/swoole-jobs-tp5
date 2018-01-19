@@ -14,7 +14,7 @@ return $config = [
     'logSaveFileWorker' => 'crontab.log', // 进程启动相关log存储名字
     'pidPath'           => RUNTIME_PATH . '/swoole-jobs/log',
     'sleep'             => 2, // 队列没消息时，暂停秒数
-    'processName'       => ':swooleTopicQueue', // 设置进程名, 方便管理, 默认值 swooleTopicQueue
+    'processName'       => ':swooleTopicQueueTp5', // 设置进程名, 方便管理, 默认值 swooleTopicQueue
     //job任务相关
     'job'         => [
         'topics'  => [
