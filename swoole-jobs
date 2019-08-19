@@ -12,12 +12,28 @@
 define('APP_PATH', __DIR__ . '/application/');
 define('RUNTIME_PATH', __DIR__ . '/runtime/');
 define('SWOOLE_JOBS_ROOT_PATH', __DIR__);
-date_default_timezone_set('Asia/Shanghai');
+
+use Kcloze\Jobs\Command\AppCommand;
+use Kcloze\Jobs\Command\HttpCommand;
+use Symfony\Component\Console\Application;
 
 // ThinkPHP 引导文件
 require SWOOLE_JOBS_ROOT_PATH . '/thinkphp/base.php';
 require SWOOLE_JOBS_ROOT_PATH . '/vendor/autoload.php';
 $config = require_once SWOOLE_JOBS_ROOT_PATH . '/application/swoole-jobs.php';
 
-$console = new \Kcloze\Jobs\Console($config);
-$console->run();
+$application    = new Application();
+$appCommand     = new AppCommand($config);
+$application->add($appCommand);
+
+//check if it has http command
+$option=$argv[1] ?? '';
+if (isset($config['httpServer']) && $option==='http') {
+    $httpCommand    = new HttpCommand($config);
+    $application->add($httpCommand);
+    $application->setDefaultCommand($appCommand->getName());
+} else {
+    $application->setDefaultCommand($appCommand->getName(), true);
+}
+
+$application->run();

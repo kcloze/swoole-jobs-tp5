@@ -15,9 +15,8 @@ class Push extends Command
 
     protected function execute(Input $input, Output $output)
     {
-
         $name = \app\service\SwooleJobs::push('MyJob', 'test');
 
-        $output->writeln('Push swoole jobs :');
+        $output->writeln('Push swoole jobs : '.$name);
     }
 }
