@@ -16,11 +16,20 @@ use Kcloze\Jobs\Queue\Queue;
  */
 class SwooleJobs
 {
+    private static $queue=null;
     /**
      * 私有构造函数，防止外界实例化对象
      */
-    private function __construct()
+    public function __construct()
     {
+        $config   = require_once APP_PATH . 'swoole-jobs.php';
+        $logger = Logs::getLogger($config['logPath'] ?? '', $config['logSaveFileApp'] ?? '');
+        if(static::$queue==null){
+            static::$queue  = Queue::getQueue($config['job']['queue'], $logger);
+            //设置工作进程参数
+            static::$queue->setTopics($config['job']['topics']);
+        }
+
     }
 
     /**
@@ -43,24 +52,17 @@ class SwooleJobs
      *
      * @throws \Exception
      */
-    public static function push($jobName, $jobClass, $method = '', $params = [], $jobExt = [])
+    public function push($jobName, $jobClass, $method = '', $params = [], $jobExt = [])
     {
         if (empty($jobName)) {
             throw new \Exception('异步任务名不能为空');
         }
 
-        $config   = require_once APP_PATH . 'swoole-jobs.php';
-
-        $logger = Logs::getLogger($config['logPath'] ?? '', $config['logSaveFileApp'] ?? '');
-        $queue  = Queue::getQueue($config['job']['queue'], $logger);
-        //设置工作进程参数
-        $queue->setTopics($config['job']['topics']);
-
         $jobExtras['delay']    = isset($jobExt['delay']) ? $jobExt['delay'] : 0;
         $jobExtras['priority'] = isset($jobExt['priority']) ? $jobExt['priority'] : BaseTopicQueue::HIGH_LEVEL_1;
 
         $job      = new JobObject($jobName, $jobClass, $method, $params, $jobExtras);
-        $result   = $queue->push($jobName, $job);
+        $result   = static::$queue->push($jobName, $job);
 
         return $result;
     }

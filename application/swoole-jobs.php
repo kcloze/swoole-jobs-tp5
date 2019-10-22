@@ -6,6 +6,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+date_default_timezone_set('Asia/Shanghai');
 
 return $config = [
     //log目录
@@ -18,7 +19,7 @@ return $config = [
     //job任务相关
     'job'         => [
         'topics'  => [
-            ['name'=>'MyJob', 'workerMinNum'=>1, 'workerMaxNum'=>20],
+            ['name'=>'MyJob', 'workerMinNum'=>1, 'workerMaxNum'=>20,'autoAckBeforeJobStart'=>false],
             // ['name'=> 'MyJob2', 'workerMinNum'=>3, 'workerMaxNum'=>10],
             // ['name'=> 'MyJob3', 'workerMinNum'=>1, 'workerMaxNum'=>10],
         ],
